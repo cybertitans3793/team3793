@@ -1,0 +1,86 @@
+package org.usfirst.frc.team3793.robot;
+
+//all imports below
+import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.vision.*;
+import edu.wpi.first.wpilibj.image.*;
+import edu.wpi.first.wpilibj.interfaces.*;
+
+public class Robot extends IterativeRobot {
+
+	/**
+	 * Has the button to move the piston been released since the last state change
+	 */
+	private boolean hasReleased = true;
+	public Joystick pistonJoystick = new Joystick(0);
+	public Joystick driveJoystick = new Joystick (1);
+	public Solenoid solenoid = new Solenoid(0);
+	public Solenoid theNoodler = new Solenoid  (1); //the arm that grabs the pool noodles
+	public Compressor compressor = new Compressor(0); 
+	//public Talon talon1 = new Talon(0); 
+   //public  //IP o f the camera
+	public Timer time = new Timer (); //time functions
+	public RobotDrive drive = new RobotDrive (0, 1); //arguments are the channels for the Left and Right motors
+	
+	
+	//------BUTTONS--------  (should be 1-#OfButtons)
+	/**the button index used for toggling the piston state*/
+	private final int pistonToggle = 1;
+	/**the index of button that must be held to turn on talon1*/
+
+	
+	//This function below run once when robot starts 
+    public void robotInit() 
+    {
+    	AxisCamera camera = new AxisCamera("10.37.93.11");
+    	camera.getBrightness();
+    	compressor.start();
+        //accel.free ();
+        time.reset ();
+    }
+    
+    //This function is called periodically during autonomous
+    public void autonomousPeriodic() { 
+    
+    }
+ 
+    //This function is called every 20 milliseconds approximately during operator control
+    public void teleopPeriodic() { 
+    	
+    	//CODE BELOW IS FOR FORKLIFT?
+    	if (pistonJoystick.getRawButton(pistonToggle)) {
+    		if (hasReleased) {
+    			solenoid.set(!solenoid.get());
+    			hasReleased = false;
+    		}
+    	}
+    	else if (!hasReleased){
+    		hasReleased = true;
+    	}
+    	//END
+    	
+    	//CODE BELOW IS FOR THE NOODLE GRABBER
+    	if (pistonJoystick.getRawButton(4)) { //opens claw
+    		if (theNoodler.get() == false) {
+    			theNoodler.set(true);
+    		}
+    		else if (pistonJoystick.getRawButton (5)) //clamps
+    		if (theNoodler.get() == true) {
+    			theNoodler.set(false); 
+    		}
+    	}
+    	//END
+    	
+    	//CODE BELOW IS FOR THE DRIVE SYSTEM
+    	drive.arcadeDrive (driveJoystick.getY(), -1*(driveJoystick.getX())); //implements driving from one joystick
+    	drive.setSensitivity (driveJoystick.getZ()); //sets turning sensitivity of Robot depending on Z axis - little wheel
+    	//END
+    	
+    } 
+            
+   //This function is called periodically during test mode.
+    public void testPeriodic() {	
+    	
+    }
+  
+}
