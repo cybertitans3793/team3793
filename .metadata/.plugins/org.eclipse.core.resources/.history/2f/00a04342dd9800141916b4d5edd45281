@@ -1,0 +1,97 @@
+
+package org.usfirst.frc.team3793.robot;
+
+//all imports below
+import javax.swing.SwingUtilities;
+
+import edu.wpi.first.wpilibj.IterativeRobot; //basics
+import edu.wpi.first.wpilibj.Joystick; //driving
+import edu.wpi.first.wpilibj.RobotDrive; //driving
+import edu.wpi.first.wpilibj.Compressor; //compressor
+import edu.wpi.first.wpilibj.Solenoid; //something about the compressor
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.image.BinaryImage; //image analyzing
+import edu.wpi.first.wpilibj.image.ColorImage; //color image
+import edu.wpi.first.wpilibj.image.NIVisionException; //idk
+import edu.wpi.first.wpilibj.image.ParticleAnalysisReport; //used for shifting through image for shapes
+import edu.wpi.first.wpilibj.vision.AxisCamera;
+
+
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory.
+ */
+
+public class Robot extends IterativeRobot {
+	
+	/*(*)
+	 * Has the button to move the piston been released since the last state change
+	 */
+	private boolean hasReleased = true;
+	public Joystick joystick1 = new Joystick(1);
+	public Solenoid solenoid = new Solenoid(1);
+	public Compressor compressor = new Compressor(2);
+	public Talon talon1 = new Talon(3);
+	public Talon talon2 = new Talon(4);
+	//public AxisCamera camera = new AxisCamera(IP_ADDRESS_HERE_IN_QUOTES);
+	
+	
+	//code below run once when robot starts
+    public void robotInit()
+    {
+    	
+    }
+
+    //This function is called periodically during autonomous - requires code as of now
+    public void autonomousPeriodic() {
+    	
+    	
+
+    }
+
+    // This function is called every 20 milliseconds approximately during operator control
+    public void teleopPeriodic() { 
+    	
+    	/*
+    	 * This code checks if the button is depressed and if it 
+    	 * is and has just been pressed toggle the solenoid state,
+    	 * if the button is not down and hasReleased has not been
+    	 * updated, then update it
+    	 */
+    	/*
+    	if (joystick1.getRawButton())
+    	{
+    		if (hasReleased)
+    		{
+    			solenoid.set(!solenoid.get());
+    			hasReleased = false;
+    		}
+    	}
+    	else if (!hasReleased)
+    	{
+    		hasReleased = true;
+    	}
+    	*/
+    	if (joystick1.getRawButton(1))
+    	{
+    		talon1.set(joystick1.getRawAxis(3));
+    	}
+    	if (joystick1.getRawButton(2))
+    	{
+    		talon2.set(joystick1.getRawAxis(3));
+    	}
+    }
+            
+   
+    // This function is called periodically during test mode
+    public void testPeriodic()
+    {
+    	
+    }
+}
+
+//THS CyberTitans
