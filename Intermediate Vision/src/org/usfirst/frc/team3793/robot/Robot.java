@@ -4,8 +4,6 @@ import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.DrawMode;
 import com.ni.vision.NIVision.Image;
 import com.ni.vision.NIVision.ShapeMode;
-import edu.wpi.first.wpilibj.
-
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SampleRobot;
@@ -20,7 +18,6 @@ import edu.wpi.first.wpilibj.Timer;
 public class Robot extends SampleRobot {
     int session;
     Image frame;
-    
 
     public void robotInit() {
 
@@ -39,13 +36,14 @@ public class Robot extends SampleRobot {
          * grab an image, draw the circle, and provide it for the camera server
          * which will in turn send it to the dashboard.
          */
-        NIVision.Rect rect = new NIVision.Rect(10, 10, 200, 300);
+        NIVision.Rect rect = new NIVision.Rect(10, 10, 100, 100);
 
         while (isOperatorControl() && isEnabled()) {
 
-            NIVision.IMAQdxGrab(session, frame, 1); 
+            NIVision.IMAQdxGrab(session, frame, 1);
             NIVision.imaqDrawShapeOnImage(frame, frame, rect,
-                    DrawMode.DRAW_VALUE, ShapeMode.SHAPE_OVAL, 0.8f);
+                    DrawMode.DRAW_VALUE, ShapeMode.SHAPE_OVAL, 0.0f);
+            
             CameraServer.getInstance().setImage(frame);
 
             /** robot code here! **/

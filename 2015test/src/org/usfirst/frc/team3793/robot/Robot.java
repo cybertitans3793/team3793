@@ -2,11 +2,14 @@ package org.usfirst.frc.team3793.robot;
 
 //all imports below
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.vision.*;
 import edu.wpi.first.wpilibj.Ultrasonic;
+
 import java.lang.*;
-//import edu.wpi.first.wpilibj.image.*;
-//import edu.wpi.first.wpilibj.interfaces.*;
+
+import com.ni.vision.NIVision;
+import com.ni.vision.NIVision.Image;
 
 public class Robot extends IterativeRobot {//implements Runnable{
 
@@ -16,6 +19,9 @@ public class Robot extends IterativeRobot {//implements Runnable{
 	private boolean hasReleased = true;
 	private boolean isStopped = false;
 	private long isScreech = 0;
+	private int screechCount = 0;
+	private double screechSum = 0.0;
+	
 	public Joystick pistonJoystick = new Joystick(0);
 	public Joystick driveJoystick = new Joystick (1);
 	public Solenoid solenoid = new Solenoid(0);
@@ -25,6 +31,8 @@ public class Robot extends IterativeRobot {//implements Runnable{
 	static public Timer time = new Timer (); //time functions
 	public RobotDrive drive = new RobotDrive (0, 1); //arguments are the channels for the Left and Right motors
 	public Ultrasonic theScreecher = new Ultrasonic (1,0);
+	//public Encoder enc = new Encoder(0, 1, false, Encoder.EncodingType.k4X);
+	//TODO: fix arguments of Encoder enc and implement
 	
 	//------BUTTONS--------  (should be 1-#OfButtons)
 	/**the button index used for toggling the piston state*/
@@ -52,12 +60,20 @@ public class Robot extends IterativeRobot {//implements Runnable{
     	//System.out.println("camera connected (supposedly)");
 	}
 	//This function below run once when robot starts 
+	
+	int session;
+    Image frame;
+    
     public void robotInit() 
     {
     	compressor.start();
         //accel.free ();
         time.reset ();
         theScreecher.setEnabled(true);
+        frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
+        session = NIVision.IMAQdxOpenCamera("cam1",
+                NIVision.IMAQdxCameraControlMode.CameraControlModeController);
+        NIVision.IMAQdxConfigureGrab(session);
     }
     
     //This function is called periodically during autonomous
@@ -66,13 +82,21 @@ public class Robot extends IterativeRobot {//implements Runnable{
     }
  
     
+    public void teleopInit()
+    {
+    	NIVision.IMAQdxStartAcquisition(session);
+    }
+    
     //This function is called every 20 milliseconds approximately during operator control
     
-    public double lastY = 0.0;
-    public double currY = 0.0;
-    public boolean slowAccel = true;
+    //public double lastY = 0.0;
+    //public double currY = 0.0;
+    //public boolean slowAccel = true;
+    
     public void teleopPeriodic() { 
     	
+    	NIVision.IMAQdxGrab(session, frame, 1);
+    	CameraServer.getInstance().setImage(frame);
     	
     	//CODE BELOW IS FOR FORKLIFT?
     	if (pistonJoystick.getRawButton(pistonToggle)) {
@@ -134,10 +158,21 @@ public class Robot extends IterativeRobot {//implements Runnable{
     	else
     		drive.arcadeDrive(driveJoystick.getY(), -driveJoystick.getX());
     	*/    	
+    	screechCount++;
+    	screechSum += theScreecher.getRangeInches();
+    	if (screechCount == 25)
+    	{
+    		SmartDashboard.putNumber("Distance", (double)(screechSum/screechCount));
+    		screechSum = 0;
+    		screechCount = 0;
+    	}
     	if (true) {
     		System.out.println(theScreecher.getRangeInches() + " inches");
-    		isScreech++;
+    		//isScreech++;
     	}
+    	
+    	
+    	
     	
     	//XBOX Controller Drive
     	//drive.drive(driveJoystick.getRawAxis(R2/L2axis), driveJoystick.getRawAxis(leftStickX;));
@@ -159,6 +194,11 @@ public class Robot extends IterativeRobot {//implements Runnable{
     	if ((driveJoystick.getY () < 0.01) && (driveJoystick.getY () > -0.01)) {
     		isStopped = true;
     	}*/
+    }
+    
+    public void disabledPeriodic()
+    {
+    	NIVision.IMAQdxStartAcquisition(session);
     }
             
    //This function is called periodically during test mode.
