@@ -5,7 +5,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.vision.AxisCamera;
 import edu.wpi.first.wpilibj.image.BinaryImage;
 import edu.wpi.first.wpilibj.image.ColorImage;
-import com.ni.vision.NIVision.CriteriaCollection;
+import com.*;
+import edu.*;
 import com.ni.vision.NIVision.MeasurementType;
 import edu.wpi.first.wpilibj.image.NIVisionException;
 import edu.wpi.first.wpilibj.image.ParticleAnalysisReport;
@@ -36,7 +37,7 @@ import edu.wpi.first.wpilibj.image.RGBImage;
 public class Robot extends SampleRobot {
     
     AxisCamera camera;          // the axis camera object (connected to the switch)
-    CriteriaCollection cc;      // the criteria for doing the particle filter operation
+    CriteriaFilter fc;      // the criteria for doing the particle filter operation
     
     public void robotInit() {
         camera = AxisCamera.getInstance();  // get an instance ofthe camera

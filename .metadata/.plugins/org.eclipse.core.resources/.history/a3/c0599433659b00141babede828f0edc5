@@ -1,0 +1,40 @@
+
+package org.usfirst.frc.team3793.robot;
+
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.vision.AxisCamera;
+import edu.wpi.first.wpilibj.AnalogAccelerometer;
+
+/**
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the IterativeRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the manifest file in the resource
+ * directory
+ */
+public class Robot extends IterativeRobot {
+	
+	AnalogAccelerometer speed = new AnalogAccelerometer (1);
+	
+	public void robotInit () {
+		/*
+		speed.free (); //frees
+		speed.setZero(x); //let x equal the voltage of to the motors when there is no acceleration
+		*?
+	}
+
+    public void autonomousPeriodic() {
+
+    	
+    }
+
+    public void teleopPeriodic() {
+        
+        
+    } 
+    
+    void testPeriodic() {
+    
+    }
+    
+}

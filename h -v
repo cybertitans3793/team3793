@@ -1,0 +1,52 @@
+[33mcommit 2b5c7273d8b7fcdba0c912ea90a07e28f201cd02[m
+Author: cybertitans3793 <joshua.holmes@fcps.org>
+Date:   Mon Feb 9 15:18:30 2015 -0500
+
+    Try the commit from 2/7/2015 (0x0ba8...) again.
+
+[33mcommit 5dc7db8306ae4e9b9af62b72c515e4ead398173d[m
+Merge: 0f9fe5c be73e0a
+Author: cybertitans3793 <joshua.holmes@fcps.org>
+Date:   Sat Feb 7 12:31:50 2015 -0500
+
+    Merge pull request #1 from saturn28/master
+    
+    Add the Development Station Setup instructions document.
+
+[33mcommit 0f9fe5c063461f1c02be510d4c07856d175de466[m
+Author: cybertitans3793 <joshua.holmes@fcps.org>
+Date:   Sat Feb 7 09:20:20 2015 -0500
+
+    Add hello.txt
+    
+    blah blah blah!
+
+[33mcommit 7c3fb67dd858f12f58fe9e545677c8d2f7dbeb54[m
+Author: cybertitans3793 <joshua.holmes@fcps.org>
+Date:   Fri Feb 6 15:03:34 2015 -0500
+
+    Add CameraSonic 2015 Test project.
+
+[33mcommit be73e0aeda2c1c39d908fef0497879792657d3fb[m
+Author: saturn28 <jeffcroc28@gmail.com>
+Date:   Mon Feb 2 22:42:17 2015 -0500
+
+    Add the Development Station Setup instructions document.
+
+[33mcommit 773bee95547921dd7d3ceb18aa4c1a0dfbc29845[m
+Author: cybertitans3793 <joshua.holmes@fcps.org>
+Date:   Sun Feb 1 12:17:06 2015 -0500
+
+    Remove the .metadata and .recommenders files. This will be the initial push of files.
+
+[33mcommit 52270cc934efb20e6526885d282651d3f7156cc8[m
+Author: cybertitans3793 <joshua.holmes@fcps.org>
+Date:   Sun Feb 1 12:12:07 2015 -0500
+
+    Initial commit.
+
+[33mcommit 765eaed6834cfb3b4979abf390adabc7a0da031c[m
+Author: cybertitans3793 <joshua.holmes@fcps.org>
+Date:   Sat Jan 31 11:39:25 2015 -0500
+
+    :lollipop: Added .gitattributes & .gitignore files
