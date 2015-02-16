@@ -9,10 +9,14 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 /* the project. */
 /*----------------------------------------------------------------------------*/
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.Jaguar; //If you use Victors, import them instead
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer; //Make sure to use this version, not the java.util version of timer.
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
 * This program initializes a PID Controller for the wheels and drives
 * 3 feet using the encoders. PID works by changing the output of the
@@ -24,6 +28,7 @@ import edu.wpi.first.wpilibj.Timer; //Make sure to use this version, not the jav
 public class Robot extends IterativeRobot {
 // This class is required to invert the direction of the motor.
 // It negates the speed, so that the robot will drive forward.
+	/*
 	class MotorDrive extends Jaguar {
 		public MotorDrive(int port) {
 			super(port);
@@ -33,21 +38,28 @@ public class Robot extends IterativeRobot {
 			super.set(-speed);
 		}
 	}
+	*/
 	//Initializes the motors.
-	private final SpeedController left = new MotorDrive(2);
-	private final SpeedController right = new Jaguar(1);
+	private Talon left = new Talon(0);
+	private Talon right = new Talon(1);
+	
+	public Joystick joystick = new Joystick(0);
 	//Initializes the Encoders.
-	private final Encoder leftEncoder = new Encoder(1, 2);
-	private final Encoder rightEncoder = new Encoder(4, 3);
+	//private final Encoder leftEncoder = new Encoder(4, 5);
+	//private final Encoder rightEncoder = new Encoder(2, 3);
 	//Proportional, Integral, and Dervative constants.
 	//These values will need to be tuned for your robot.
 	private final double Kp = 0.3;
 	private final double Ki = 0.0;
 	private final double Kd = 0.0;
+	private final double Kf = 1.0;
 	//This must be fully initialized in the constructor, after the settings
 	//for the encoders have been done.
-	private PIDController leftPID;
-	private PIDController rightPID;
+	public Encoder leftEncoder = new Encoder(4, 5, false, Encoder.EncodingType.k4X);
+	public Encoder rightEncoder = new Encoder(2, 3, false, Encoder.EncodingType.k4X);
+	
+	private PIDController leftPID = new PIDController(Kp, Ki, Kd, Kf, leftEncoder, left, 0.02);
+	private PIDController rightPID = new PIDController(Kp, Ki, Kd, Kf, rightEncoder, right, 0.02);
 	
 	public void RobotInit() {
 		//Sets the distance per pulse in inches.
@@ -59,32 +71,54 @@ public class Robot extends IterativeRobot {
 		//Sets the encoders to use distance for PID.
 		//If this is not done, the robot may not go anywhere.
 		//It is also possible to use rate, by changing kDistance to kRate.
-		leftEncoder.setPIDSourceParameter(Encoder.PIDSourceParameter.kDistance);
-		rightEncoder.setPIDSourceParameter(Encoder.PIDSourceParameter.kDistance);
+		leftEncoder.setPIDSourceParameter(Encoder.PIDSourceParameter.kRate);
+		rightEncoder.setPIDSourceParameter(Encoder.PIDSourceParameter.kRate);
 		//Initializes the PID Controllers
-		leftPID = new PIDController(Kp, Ki, Kd, leftEncoder, left);
-		rightPID = new PIDController(Kp, Ki, Kd, rightEncoder, right);
+		//leftPID = new PIDController(Kp, Ki, Kd, leftEncoder, left);
+		//rightPID = new PIDController(Kp, Ki, Kd, rightEncoder, right);
 		//Enables the PID Controllers.
-		leftPID.enable();
-		rightPID.enable();
+		//leftPID.enable();
+		//rightPID.enable();
 		//Sets the input range of the PID Controller.
 		//These will change, and you should change them based on how far
 		//your robot will be driving.
 		//For this example, we set them at 100 inches.
-		leftPID.setInputRange(0, 100);
-		rightPID.setInputRange(0, 100);
+		leftPID.setInputRange(-3000.0, 3000.0);
+		rightPID.setInputRange(-3000.0, 3000.0);
+		//leftPID.setPercentTolerance(10.0);
+		//rightPID.setPercentTolerance(10.0);
 	}
 	/**
 	 * This function is called once each time the robot enters operator control.
 	 * Teleop commands are put in here
 	 */
-	public void teleopPeriodic() {
-		//Sets the left and the right motors to
-		//drive forward 60 inches, or 5 feet
-		leftPID.setSetpoint(60);
-		rightPID.setSetpoint(60);
-		//This will wait 10 seconds before the end of operator control
-		//is reached, so that the robot has time to drive the full 5 feet.
-		//You could have other tasks running here as well.
+	public void testInit()
+	{
+		leftPID.startLiveWindowMode();
+		rightPID.startLiveWindowMode();
+		LiveWindow.addActuator("Drivetrain", "PID Controller L", leftPID);
+		LiveWindow.addActuator("Drivetrain", "PID Controller R", rightPID);
+	}
+	
+	public void teleopInit()
+	{
+		leftPID.setPID(Kp, Ki, Kd, 10);
+		rightPID.setPID(Kp, Ki, Kd, -10);
+		leftPID.setSetpoint(2600.0);
+		rightPID.setSetpoint(-2600.0);
+		leftPID.enable();
+		rightPID.enable();
+	}
+	
+	public void teleopPeriodic()
+	{
+		//left.pidWrite(0.2);
+		//right.pidWrite(-0.2);
+		SmartDashboard.putNumber("left Error ", leftPID.getError());
+		SmartDashboard.putNumber("right Error ", rightPID.getError());
+		SmartDashboard.putNumber("left setpoint ", leftPID.getSetpoint());
+		SmartDashboard.putNumber("right setpoint ", rightPID.getSetpoint());
+		//SmartDashboard.putBoolean("left onTarget", leftPID.onTarget());
+		//SmartDashboard.putBoolean("right onTarget", rightPID.onTarget());
 	}
 }

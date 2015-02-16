@@ -69,7 +69,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	
     	
-	    drive.arcadeDrive(-driveJoystick.getY(), driveJoystick.getX(), true);
+	    drive.arcadeDrive(-driveJoystick.getY(), -driveJoystick.getX(), true);
 	    
 	  
 	    //&& !(ToteGrabber.get () == false)
